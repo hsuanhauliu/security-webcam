@@ -2,25 +2,24 @@
     A security camera on computer using webcam.
 """
 
+
 import cv2 as cv
-import numpy as np
+#import matplotlib.pyplot as plt
+#import numpy as np
+
+import security_webcam as sw
 
 
 def main():
     """ Main function """
-    cap = cv.VideoCapture(0)
+    fps = 30
+    length = 5
+    verbose=True
+    output_file = 'temp.mov'
 
+    clip = sw.start_webcam(fps=fps, length=length, verbose=verbose)
+    sw.output_vid(output_file, clip, verbose=verbose)
 
-    while True:
-        _, frame = cap.read()
-        cv.imshow('smile', frame)
-
-        key = cv.waitKey(1) & 0xFF
-
-        if key == 27:
-            break
-
-    cap.release()
     cv.destroyAllWindows()
 
 
