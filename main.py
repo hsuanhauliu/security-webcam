@@ -4,6 +4,7 @@
 
 
 import cv2 as cv
+import face_recognition as fr
 #import matplotlib.pyplot as plt
 #import numpy as np
 
@@ -12,12 +13,14 @@ import security_webcam as sw
 
 def main():
     """ Main function """
-    fps = 30
+
+    top_fps = 30
     length = 5
-    verbose=True
+    verbose = True
     output_file = 'temp.mov'
 
-    clip = sw.start_webcam(fps=fps, length=length, verbose=verbose)
+    clip = sw.start_webcam(fps=top_fps, buffer_length=length, show_cam=False, verbose=verbose)
+    print('FPS:', clip.fps)
     sw.output_vid(output_file, clip, verbose=verbose)
 
     cv.destroyAllWindows()
