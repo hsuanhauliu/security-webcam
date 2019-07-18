@@ -1,6 +1,10 @@
 # MacOS
 .DS_Store
 
+# Temporary/Test folders
+temp/
+test/
+
 # Pylint
 pylintrc
 
