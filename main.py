@@ -3,27 +3,28 @@
 """
 
 
+from datetime import datetime
+
 import cv2 as cv
 import face_recognition as fr
-#import matplotlib.pyplot as plt
-#import numpy as np
-
 import security_webcam as sw
 
 
 def main():
     """ Main function """
-
     top_fps = 30
-    length = 5
+    buffer_length = 5
     verbose = True
-    output_file = 'temp.mov'
+    cap = sw.start_cam(fps=top_fps)
 
-    clip = sw.start_webcam(fps=top_fps, buffer_length=length, show_cam=False, verbose=verbose)
-    print('FPS:', clip.fps)
-    sw.output_vid(output_file, clip, verbose=verbose)
+    while True:
+        clip, stop = sw.start_recording(cap, fps=top_fps, buffer_length=buffer_length, show_cam=False, verbose=verbose)
+        sw.output_vid(str(datetime.today()) + '.mov', clip, verbose=verbose)
 
-    cv.destroyAllWindows()
+        if stop:
+            break
+
+    sw.close_cam(cap)
 
 
 if __name__ == '__main__':
