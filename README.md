@@ -41,7 +41,3 @@ python3 main.py -v 30 10
 ```
 
 You can also import the package in your code. See demo.py for example.
-
-## Demo
-
-## Notes
