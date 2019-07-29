@@ -2,10 +2,18 @@
 
 A security camera system using computer webcam that auto-saves clips when a person's face is detected.
 
-How it works:
-- After the program is executed, it will start using the webcam to record. All frames are saved in a buffer which will keep only the recent frames (depending on the buffer_length set).
-- Once a face is detected, it will start recording all the frames until a few seconds after the face is no longer in the frame (the wait time is also depending on the buffer_length). After that, an mov file will be created and the name of the file is the recorded time.
-- The program will then resume to recording repeat the same process until the user terminates the program.
+## How It Works
+
+- After the program is executed, it will start recording via webcam on your computer. All frames are saved in a buffer which is used to keep only the most recent frames (size depends on the buffer_length set initially).
+- Every time a face is detected, it will start recording all the frames until a few seconds after the face is no longer within the camera frame. The number of seconds it will wait before saving the clip also equals to the buffer_length. A .mov file will be created and named after the recorded time.
+- The program will then resume to recording and repeat the same process until the user terminates the program.
+
+## Features
+
+- Custom FPS and buffer length settings.
+- Real-time face detection.
+- CLI provides easy execution.
+- Ability to see the recording in real-time.
 
 ## Getting Started
 
@@ -29,10 +37,12 @@ pip install .
 
 ### Usage
 
+#### CLI
+
 Follow the commands below to run the program.
 
 ```
-security_webcam [top_fps] [buffer_length]
+security_webcam [-h] [-v] [-s] [-o OUTPUT] top_fps buffer_length
 ```
 - top_fps: maximum fps allowed.
 - buffer_length: the length (in seconds) of the segments before and after a face is detected.
@@ -43,4 +53,11 @@ Example:
 python3 main.py -v -o recordings/ 30 10
 ```
 
+To quit the program, simply press Ctrl-C or ESC if -s flag is triggered.
+
+#### Import As Python Package
+
 You can also import the package in your code. See demo.py for example.
+```
+python3 demo.py
+```
