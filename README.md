@@ -23,6 +23,8 @@ A step by step series of examples that tell you how to get a development env run
 
 ```
 git clone https://github.com/hsuanhauliu/security-webcam
+cd security-webcam
+pip install .
 ```
 
 ### Usage
@@ -30,14 +32,15 @@ git clone https://github.com/hsuanhauliu/security-webcam
 Follow the commands below to run the program.
 
 ```
-python3 main.py [top_fps] [buffer_length]
+security_webcam [top_fps] [buffer_length]
 ```
 - top_fps: maximum fps allowed.
 - buffer_length: the length (in seconds) of the segments before and after a face is detected.
+- Use -o flag to specify video output path. The default path is the current directory where the program is executed.
 
 Example:
 ```
-python3 main.py -v 30 10
+python3 main.py -v -o recordings/ 30 10
 ```
 
 You can also import the package in your code. See demo.py for example.
