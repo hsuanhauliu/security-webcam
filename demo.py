@@ -16,7 +16,7 @@ def main():
     cap = sw.start_cam(fps=top_fps)
 
     while True:
-        clip= sw.start_recording(cap, fps=top_fps, buffer_length=buffer_length, show_cam=False, verbose=verbose)
+        clip = sw.start_recording(cap, fps=top_fps, buffer_length=buffer_length, show_cam=True, verbose=verbose)
         sw.output_vid(str(datetime.today()) + '.mov', clip, verbose=verbose)
 
     sw.close_cam(cap)

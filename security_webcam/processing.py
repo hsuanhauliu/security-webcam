@@ -2,6 +2,7 @@
 
 
 from time import time
+import sys
 
 import cv2 as cv
 import face_recognition as fr
@@ -42,6 +43,9 @@ def start_recording(cap, fps=30, buffer_length=10, show_cam=False, verbose=False
 
         if show_cam:
             cv.imshow('Security Webcam', frame)
+            key = cv.waitKey(1) & 0xFF
+            if key == 27:
+                sys.exit(0)
 
         vid_buffer.load(frame)
         num_frames += 1
