@@ -21,6 +21,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
+See [here](requirements.txt) for a complete list of required modules.
 - Python >= 3.6
 - [face_recognition](https://github.com/ageitgey/face_recognition) >= 1.2.3
 - OpenCV >= 3.4.2
