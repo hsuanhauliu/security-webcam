@@ -66,3 +66,9 @@ To quit the program, simply press Ctrl-C or ESC if -s flag is used.
 #### Import As Python Package
 
 You can also import the package in your code. See [demo.py](demo.py) for example.
+
+
+## Future Works
+- Use motion detection instead of facial recognition to decide when to start recording.
+- Implement maximum video length to segment long video recordings.
+- Add threads for recording and saving videos.
