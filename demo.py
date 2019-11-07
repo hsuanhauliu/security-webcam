@@ -1,5 +1,8 @@
 """
     A security camera on computer using webcam.
+
+    Usage:
+        python3 demo.py
 """
 
 

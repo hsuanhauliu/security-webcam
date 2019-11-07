@@ -26,10 +26,17 @@ See [here](requirements.txt) for a complete list of required modules.
 - [face_recognition](https://github.com/ageitgey/face_recognition) >= 1.2.3
 - OpenCV >= 3.4.2
 
+
 ### Installation
 
 A step by step series of examples that tell you how to get a development env running.
 
+Use the following command to install all packages.
+```
+pip install -r requirements.txt
+```
+
+Build the program from source.s
 ```
 git clone https://github.com/hsuanhauliu/security-webcam
 cd security-webcam
@@ -51,14 +58,11 @@ security_webcam [-h] [-v] [-s] [-o OUTPUT] top_fps buffer_length
 
 Example:
 ```
-python3 main.py -v -o recordings/ 30 10
+security_webcam -v -o recordings 30 10
 ```
 
-To quit the program, simply press Ctrl-C or ESC if -s flag is triggered.
+To quit the program, simply press Ctrl-C or ESC if -s flag is used.
 
 #### Import As Python Package
 
-You can also import the package in your code. See demo.py for example.
-```
-python3 demo.py
-```
+You can also import the package in your code. See [demo.py](demo.py) for example.
