@@ -10,14 +10,14 @@ import security_webcam as sw
 
 def main():
     """ Main function """
-    top_fps = 30
-    buffer_length = 5
-    verbose = True
-    cap = sw.start_cam(fps=top_fps)
+    fps, buffer_length, verbose, show_cam = 30, 5, True, False
 
+    cap = sw.start_cam(fps=fps)
     while True:
-        clip = sw.start_recording(cap, fps=top_fps, buffer_length=buffer_length, show_cam=True, verbose=verbose)
-        sw.output_vid(str(datetime.today()) + '.mov', clip, verbose=verbose)
+        frame_size, clips = sw.start_recording(cap, fps=fps, buffer_length=buffer_length,
+                                               show_cam=show_cam, verbose=verbose)
+        filename = str(datetime.today()) + '.mov'
+        sw.output_vid(filename, clips, fps, frame_size, verbose=verbose)
 
     sw.close_cam(cap)
 

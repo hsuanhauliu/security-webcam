@@ -2,14 +2,14 @@
     Module for processing videos
 """
 
-# pylint: disable=expression-not-assigned
+# pylint: disable=expression-not-assigned, too-many-locals
 
 from time import time
 import sys
 
 import cv2 as cv
 import face_recognition as fr
-from security_webcam.video_buffer import VideoBuffer
+from security_webcam.video_buffer import VideoBuffer, TemporaryBuffer
 
 
 def start_cam(fps=30, webcam_code=0):
@@ -19,12 +19,18 @@ def start_cam(fps=30, webcam_code=0):
     return cap
 
 
-def start_recording(cap, fps=30, buffer_length=10, show_cam=False, verbose=False):
+def start_recording(cap, fps=30, buffer_length=5, show_cam=False, verbose=False):
     """ Start recording """
     _, frame = cap.read()   # read the first frame to get dimension of the frame
-    vid_buffer = VideoBuffer((frame.shape[1], frame.shape[0]), fps=fps, length=buffer_length)
+
+    # create two buffers
+    temp_buffer = TemporaryBuffer(fps=fps, length=buffer_length)
+    vid_buffer = VideoBuffer(fps=fps)
+    buffers = []    # buffer list TODO set a maximum length for each buffer
+
+    # initialize some variables
     prev_time = time()
-    num_frames, face_detected = 0, False
+    face_detected = False
 
     print('Starting webcam capturing...') if verbose else None
     while True:
@@ -34,28 +40,31 @@ def start_recording(cap, fps=30, buffer_length=10, show_cam=False, verbose=False
 
         # switch mode once a face is detected
         if face_locations:
-            print('FACE DETECTED!!!') if verbose else None
-            face_detected = vid_buffer.recording = True
-
-            # reset time and num of frames every time a face is detected
+            print('>>> FACE DETECTED!!!') if verbose else None
+            face_detected = True
             prev_time = time()
-            num_frames = 0
 
+        # show the video feed
         if show_cam:
             cv.imshow('Security Webcam', frame)
             key = cv.waitKey(1) & 0xFF
             if key == 27:
                 sys.exit(0)
 
-        vid_buffer.load(frame)
-        num_frames += 1
+        if face_detected:
+            vid_buffer.load(frame)
+        else:
+            temp_buffer.load(frame)
+
         curr_time = time()
+
+        # if wait time is reached, exit
         if face_detected and curr_time - prev_time > buffer_length:
-            vid_buffer.fps = num_frames // (curr_time - prev_time)
+            buffers.append(temp_buffer)
+            buffers.append(vid_buffer)
             break
 
-
-    return vid_buffer
+    return (frame.shape[1], frame.shape[0]), buffers
 
 
 def close_cam(cap):
@@ -64,21 +73,14 @@ def close_cam(cap):
     cv.destroyAllWindows()
 
 
-def output_vid(output_file, video_clip, verbose=False):
+def output_vid(output_file, video_clips, fps, frame_size, verbose=False):
     """ Save video as video file """
-    if not isinstance(video_clip, VideoBuffer):
-        raise TypeError('Video clip must be of type VideoBuffer')
-
-    if video_clip.is_empty():
-        raise ValueError('There are no frames to be saved')
-
     fourcc = cv.VideoWriter_fourcc(*'mp4v')
-    out = cv.VideoWriter(output_file, fourcc, video_clip.fps, video_clip.frame_size)
+    out = cv.VideoWriter(output_file, fourcc, fps, frame_size)
 
-    for frame in video_clip.next():
-        out.write(frame)
+    for buf in video_clips:
+        for frame in buf.next():
+            out.write(frame)
 
     out.release()
-
-    if verbose:
-        print('Finished saving video')
+    print('Finished saving video') if verbose else None

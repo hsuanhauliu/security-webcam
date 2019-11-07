@@ -20,12 +20,12 @@ def main():
     cap = start_cam(fps=top_fps)
     while True:
         # return clips only when the whole footage is captured
-        clips = start_recording(cap, fps=top_fps, buffer_length=buffer_length,
-                                show_cam=show_cam, verbose=verbose)
+        frame_size, clips = start_recording(cap, fps=top_fps, buffer_length=buffer_length,
+                                            show_cam=show_cam, verbose=verbose)
 
         # combine all clips into one video and store it in the current directory
         file_path = os.path.join(output_path, str(datetime.today()) + '.mov')
-        output_vid(file_path, clips, verbose=verbose)
+        output_vid(file_path, clips, top_fps, frame_size, verbose=verbose)
 
     close_cam(cap)
 
@@ -41,3 +41,7 @@ def parse_inputs():
     args = parser.parse_args()
 
     return args.verbose, args.show, args.output, args.fps, args.buffer_length
+
+
+if __name__ == "__main__":
+    main()
