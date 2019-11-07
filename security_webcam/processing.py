@@ -1,5 +1,8 @@
-""" Module for processing videos """
+"""
+    Module for processing videos
+"""
 
+# pylint: disable=expression-not-assigned
 
 from time import time
 import sys
@@ -23,9 +26,7 @@ def start_recording(cap, fps=30, buffer_length=10, show_cam=False, verbose=False
     prev_time = time()
     num_frames, face_detected = 0, False
 
-    if verbose:
-        print('Starting webcam capturing...')
-
+    print('Starting webcam capturing...') if verbose else None
     while True:
         _, frame = cap.read()
         small_frame = cv.resize(frame, (0, 0), fx=0.25, fy=0.25)
@@ -33,8 +34,7 @@ def start_recording(cap, fps=30, buffer_length=10, show_cam=False, verbose=False
 
         # switch mode once a face is detected
         if face_locations:
-            if verbose:
-                print('FACE DETECTED!!!')
+            print('FACE DETECTED!!!') if verbose else None
             face_detected = vid_buffer.recording = True
 
             # reset time and num of frames every time a face is detected

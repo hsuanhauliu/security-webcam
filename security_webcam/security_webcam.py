@@ -17,14 +17,15 @@ def main():
     if not os.path.isdir(output_path):
         raise ValueError('Not a directory')
 
-    if output_path[-1] != '/':
-        output_path += '/'
-
     cap = start_cam(fps=top_fps)
-
     while True:
-        clip = start_recording(cap, fps=top_fps, buffer_length=buffer_length, show_cam=show_cam, verbose=verbose)
-        output_vid(output_path + str(datetime.today()) + '.mov', clip, verbose=verbose)
+        # return clips only when the whole footage is captured
+        clips = start_recording(cap, fps=top_fps, buffer_length=buffer_length,
+                                show_cam=show_cam, verbose=verbose)
+
+        # combine all clips into one video and store it in the current directory
+        file_path = os.path.join(output_path, str(datetime.today()) + '.mov')
+        output_vid(file_path, clips, verbose=verbose)
 
     close_cam(cap)
 
