@@ -3,46 +3,37 @@ class VideoBuffer:
 
     def __init__(self, frame_size, fps=30, length=60):
         self.frame_size = frame_size
+        self.num_frames = 0
         self._fps = fps
         self._length = length
         self._limit = fps * length
-        self._buffer = []
-        self.num_frames = 0
-        self.recording = False
+        self._buffer = [None] * self._limit
+        self.recording = False  # lock for the buffer
+        self.curr_i = 0
 
 
     @property
     def fps(self):
+        """ Frame per second of the video buffer """
         return self._fps
 
-
     @fps.setter
-    def fps(self, new_fps):
-        self._fps = new_fps
-        self._limit = new_fps * self._length
+    def fps(self, fps):
+        self._fps = fps
+        self._limit = fps * self.length
 
 
     @property
     def length(self):
+        """ Length of the video buffer in seconds """
         return self._length
-
-
-    @length.setter
-    def length(self, new_length):
-        self._length = new_length
-        self._limit = new_length * self._fps
 
 
     def load(self, new_frame):
         """ Load new frame to video buffer """
-        if self.recording or self.num_frames < self._limit:
-            self._buffer.append(new_frame)
-            self.num_frames += 1
-            return
-
-        # discard the oldest frame
-        self._buffer.pop(0)
-        self._buffer.append(new_frame)
+        self._buffer[self.curr_i] = new_frame
+        self.curr_i = (self.curr_i + 1) % self._limit
+        self.num_frames = min(self.num_frames + 1, self._limit)
 
 
     def is_empty(self):
@@ -50,7 +41,20 @@ class VideoBuffer:
         return self.num_frames == 0
 
 
+    def is_full(self):
+        """ Check if the buffer is full """
+        return self._buffer[self.curr_i] is not None
+
+
     def next(self):
         """ Generator for reading frame from buffer """
-        for frame in self._buffer:
+        if self.is_full():
+            for frame in self._buffer[self.curr_i:]:
+                yield frame
+
+            for frame in self._buffer[:self.curr_i]:
+                yield frame
+            return
+
+        for frame in self._buffer[:self.curr_i]:
             yield frame
