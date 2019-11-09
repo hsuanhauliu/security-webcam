@@ -2,19 +2,29 @@
     Motion detection module.
 """
 
-import numpy as np
 import cv2 as cv
 import imutils
+import numpy as np
 
 
 class MotionDetector:
     """ Motion detection class. """
+
     def __init__(self, weight=0.5):
         self.weight = weight
         self.bg = None
+        self._counter = 0
 
 
-    def update(self, im):
+    @staticmethod
+    def _process_frame(frame, ratio):
+        """ Process frame for motion detection """
+        gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+        gray = cv.resize(gray, (0, 0), fx=ratio, fy=ratio)
+        return cv.GaussianBlur(gray, (7, 7), 0)
+
+
+    def _update(self, im):
         """ Compute average weight of the input image """
         if self.bg is None:
             self.bg = im.copy().astype("float")
@@ -25,7 +35,11 @@ class MotionDetector:
 
     def detect(self, im, threshold=25):
         """ Detect motion from the image """
-        if self.bg is None:
+        im = self._process_frame(im, 0.25)
+
+        if self.bg is None or self._counter < 10:
+            self._counter += 1
+            self._update(im)
             return None
 
         # calculate absolute difference first
@@ -41,15 +55,22 @@ class MotionDetector:
         cnts = cv.findContours(th.copy(), cv.RETR_EXTERNAL,
                                cv.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
+        rect = self._find_boundary(cnts)
 
-        if not cnts:
+        self._update(im)
+        return rect
+
+
+    @staticmethod
+    def _find_boundary(contours):
+        """ Find boundary coordinates based on contours """
+        if not contours:
             return None
 
-        minX, minY = np.inf, np.inf
-        maxX, maxY = -np.inf, -np.inf
-        for c in cnts:
+        min_x, min_y, max_x, max_y = np.inf, np.inf, -np.inf, -np.inf
+        for c in contours:
             x, y, w, h = cv.boundingRect(c)
-            minX, minY = min(minX, x), min(minY, y)
-            maxX, maxY = max(maxX, x + w), max(maxY, y + h)
+            min_x, min_y = min(min_x, x), min(min_y, y)
+            max_x, max_y = max(max_x, x + w), max(max_y, y + h)
 
-        return th, (minX, minY, maxX, maxY)
+        return (min_x, min_y, max_x, max_y)
