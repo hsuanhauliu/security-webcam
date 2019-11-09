@@ -25,6 +25,9 @@ class MotionDetector:
 
     def detect(self, im, threshold=25):
         """ Detect motion from the image """
+        if self.bg is None:
+            return None
+
         # calculate absolute difference first
         delta = cv.absdiff(self.bg.astype("uint8"), im)
 

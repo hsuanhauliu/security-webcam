@@ -6,16 +6,23 @@
 class VideoBuffer:
     """ Video Buffer class """
 
-    def __init__(self, fps=30):
-        self.num_frames = 0
+    def __init__(self, fps=30, max_length=180):
         self._fps = fps
-        self._buffer = []
+        self._buffer = [0] * (fps * max_length)
+        self._curr_i = 0
+
+
+    @property
+    def num_frames(self):
+        """ Number of frames in the buffer """
+        return self._curr_i
 
 
     @property
     def fps(self):
         """ Frame per second of the video buffer """
         return self._fps
+
 
     @fps.setter
     def fps(self, fps):
@@ -24,18 +31,23 @@ class VideoBuffer:
 
     def load(self, new_frame):
         """ Load new frame to video buffer """
-        self._buffer.append(new_frame)
-        self.num_frames += 1
+        self._buffer[self._curr_i] = new_frame
+        self._curr_i += 1
 
 
     def is_empty(self):
         """ Check if the buffer is empty """
-        return not self.num_frames
+        return not self._num_frames
+
+
+    def is_full(self):
+        """ Check if the buffer is full """
+        return len(self._buffer) == self.curr_i
 
 
     def next(self):
         """ Generator for reading frame from buffer """
-        for frame in self._buffer:
+        for frame in self._buffer[:self._curr_i]:
             yield frame
 
 
@@ -44,10 +56,16 @@ class TemporaryBuffer(VideoBuffer):
 
     def __init__(self, fps=30, length=5):
         super().__init__(fps=fps)
+        self._num_frames = 0
         self._length = length
         self._limit = fps * length
         self._buffer = [None] * self._limit
-        self.curr_i = 0
+
+
+    @property
+    def num_frames(self):
+        """ Number of frames in the buffer """
+        return self._limit if self.is_full() else self._curr_i
 
 
     @property
@@ -58,30 +76,24 @@ class TemporaryBuffer(VideoBuffer):
 
     def load(self, new_frame):
         """ Load new frame to video buffer """
-        self._buffer[self.curr_i] = new_frame
-        self.curr_i = (self.curr_i + 1) % self._limit
-        self.num_frames = min(self.num_frames + 1, self._limit)
+        self._buffer[self._curr_i] = new_frame
+        self._curr_i = (self._curr_i + 1) % self._limit
 
 
     def is_full(self):
         """ Check if the buffer is full """
-        return self._buffer[self.curr_i] is not None
+        return self._buffer[self._curr_i] is not None
 
 
     def next(self):
         """ Generator for reading frame from buffer """
         if self.is_full():
-            for frame in self._buffer[self.curr_i:]:
+            for frame in self._buffer[self._curr_i:]:
                 yield frame
 
-            for frame in self._buffer[:self.curr_i]:
+            for frame in self._buffer[:self._curr_i]:
                 yield frame
             return
 
-        for frame in self._buffer[:self.curr_i]:
+        for frame in self._buffer[:self._curr_i]:
             yield frame
-
-
-if __name__ == "__main__":
-    temp = VideoBuffer(fps=30)
-    temp2 = TemporaryBuffer(fps=30, length=2)
