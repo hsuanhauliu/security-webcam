@@ -1,19 +1,20 @@
 # Security Webcam
 
-A security camera system using computer webcam that auto-saves clips when a person's face is detected.
+A motion-sensing webcam-based security system that auto-saves important footages.
 
 ## How It Works
 
-- After the program is executed, it will start recording via webcam on your computer. All frames are saved in a buffer which is used to keep only the most recent frames (size depends on the buffer_length set initially).
-- Every time a face is detected, it will start recording all the frames until a few seconds after the face is no longer within the camera frame. The number of seconds it will wait before saving the clip also equals to the buffer_length. A .mov file will be created and named after the recorded time.
+- After the program starts, it will start recording via webcam on your computer. All frames are saved in a buffer which is used to save the most recent frames (default to 5 seconds) before any motion is detected.
+- Every time a face is detected, it will start saving all the frames until motion is no longer being detected. All videos are saved in mov format and placed in the specified directory (default to current directory).
 - The program will then resume to recording and repeat the same process until the user terminates the program.
+- If the footage is longer than a certain amount of time (default to 5 minutes), the footage will be segmented into smaller video files.
 
 ## Features
 
-- Custom FPS and buffer length settings.
+- Customizable settings (fps, buffer length, segmentation length, etc)
 - Real-time face detection.
 - CLI provides easy execution.
-- Ability to see the recording in real-time.
+- Ability to see the video stream happening in real-time.
 
 ## Getting Started
 
@@ -47,28 +48,49 @@ pip install .
 
 #### CLI
 
-Follow the commands below to run the program.
+To start the program with default settings, simply type
 
 ```
-security_webcam [-h] [-v] [-s] [-o OUTPUT] top_fps buffer_length
+security_webcam
 ```
-- top_fps: maximum fps allowed.
-- buffer_length: the length (in seconds) of the segments before and after a face is detected.
-- Use -o flag to specify video output path. The default path is the current directory where the program is executed.
+
+It also has options for you to customize the settings.
+
+```
+security_webcam [-h] [-v] [-t] [-s] [-o OUTPUT] [--fps] [--temp_buffer_len] [--vid_buffer_len] [--max_len]
+```
+
+- -h: help flag
+- -v: verbose for showing more messages.
+- -t: show time on the recordings. True by default.
+- -s: show webcam stream.
+- -o: output path. Default to current directory.
+- --top_fps: maximum fps allowed. Default to 30 fps.
+- --temp_buffer_len: length (in seconds) of the video segments before and after important footage. Default to 5 seconds.
+- --vid_buffer_len: length (in seconds) of the actual captured footage. Default to 60 seconds.
+- --max_len: maximum length (in minutes) of the actual footage. Default to 5 minutes.
+
 
 Example:
 ```
-security_webcam -v -o recordings 30 10
+security_webcam -v -o recordings/ --fps 15 --max_len 3
 ```
 
 To quit the program, simply press Ctrl-C or ESC if -s flag is used.
 
 #### Import As Python Package
 
-You can also import the package in your code. See [demo.py](demo.py) for example.
+You can also import the package in your code. See [demo.py](demo.py) for examples.
 
 
-## Future Works
-- Use motion detection instead of facial recognition to decide when to start recording.
-- Implement maximum video length to segment long video recordings.
-- Add threads for recording and saving videos.
+## Tasks
+- [x] Use motion detection instead.
+- [x] Implement maximum video length to segment long video recordings.
+- [x] Add time stamp.
+- [ ] Remove imutils dependency.
+- [ ] Add more error checking to the modules.
+- [ ] Use JSON file for settings.
+- [ ] Improve documentation.
+- [ ] Use facial recognition to determine if a footage is important.
+- [ ] Add the ability to log important events.
+- [ ] Add local server to stream the video
