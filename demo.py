@@ -13,19 +13,20 @@ import security_webcam as sw
 
 def main():
     """ Main function """
-    fps, buffer_length, verbose, show_cam, show_time = 30, 5, True, True, True
-    print(f"Settings >>>> top fps: {fps}, buffer length: {buffer_length} seconds")
 
     cc = sw.CameraControl()
-    cc.start_cam(fps=fps)
+    cc.start_cam(fps=30)
     input("Press Enter to start recording...")
     while True:
-        print("Recording...") if verbose else None
-        clips, frame_size, real_fps = cc.start_recording(fps=fps,
-                                                         buffer_length=buffer_length,
-                                                         show_cam=show_cam,
-                                                         verbose=verbose,
-                                                         show_time=show_time)
+        print("Recording...")
+        clips, frame_size, real_fps = cc.start_recording(fps=30,
+                                                         temp_buffer_len=5,
+                                                         vid_buffer_len=10,
+                                                         max_len=5,
+                                                         show_cam=False,
+                                                         verbose=True,
+                                                         show_time=True)
+        print("Saving footage...")
         filename = str(datetime.today()) + '.mov'
         sw.output_vid(filename, clips, real_fps, frame_size)
 

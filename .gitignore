@@ -1,6 +1,9 @@
 # MacOS
 .DS_Store
 
+# Videos
+*.mov
+
 # Temporary/Test folders
 temp/
 test/

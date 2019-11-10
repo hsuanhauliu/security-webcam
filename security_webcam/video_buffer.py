@@ -6,9 +6,9 @@
 class VideoBuffer:
     """ Video Buffer class """
 
-    def __init__(self, fps=30, max_length=180):
+    def __init__(self, fps=30, length=60):
         self._fps = fps
-        self._buffer = [0] * (fps * max_length)
+        self._buffer = [0] * (fps * length)
         self._curr_i = 0
 
 
@@ -31,6 +31,9 @@ class VideoBuffer:
 
     def load(self, new_frame):
         """ Load new frame to video buffer """
+        if self.is_full():
+            raise AttributeError("Buffer is full")
+
         self._buffer[self._curr_i] = new_frame
         self._curr_i += 1
 
@@ -42,7 +45,7 @@ class VideoBuffer:
 
     def is_full(self):
         """ Check if the buffer is full """
-        return len(self._buffer) == self.curr_i
+        return len(self._buffer) == self._curr_i
 
 
     def next(self):

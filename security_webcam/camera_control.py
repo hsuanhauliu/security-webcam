@@ -29,15 +29,18 @@ class CameraControl:
         self._cap.set(cv.CAP_PROP_FPS, fps)
 
 
-    def start_recording(self, fps=30, buffer_length=5, show_time=False,
-                        show_cam=False, verbose=False):
+    def start_recording(self, fps=30, temp_buffer_len=5, vid_buffer_len=60,
+                        max_len=5, show_time=False, show_cam=False, verbose=False):
         """ Start recording """
         _, frame = self._cap.read()   # read the first frame to get dimension of the frame
 
-        # initialize buffers
-        temp_buffer = TemporaryBuffer(fps=fps, length=buffer_length)
-        vid_buffer = VideoBuffer(fps=fps)
-        buffers = []    # buffer list TODO set a maximum length for each buffer
+        # initialize buffer list
+        temp_buffer = TemporaryBuffer(fps=fps, length=temp_buffer_len)
+        buffers = [None] * (max_len + 1)
+        buffers[0] = temp_buffer
+        for i in range(1, len(buffers)):
+            buffers[i] = VideoBuffer(fps=fps, length=vid_buffer_len)
+        curr_i = 1
 
         # initialize some variables
         curr_time = prev_time = detected_time = time()
@@ -55,8 +58,8 @@ class CameraControl:
 
             # switch mode once a face is detected
             if detected_frame:
-                print('>>> MOTION DETECTED!!!') if verbose else None
                 if not motion_detected:
+                    print('>>> MOTION DETECTED!!!') if verbose else None
                     detected_time = time()
 
                 motion_detected = True
@@ -66,17 +69,24 @@ class CameraControl:
             self._show_cam(frame) if show_cam else None
 
             # decide which buffer to put in
-            vid_buffer.load(frame) if motion_detected else temp_buffer.load(frame)
+            buffers[curr_i].load(frame) if motion_detected else temp_buffer.load(frame)
 
             curr_time = time()
 
+            # use the next buffer once the current one is full
+            if buffers[curr_i].is_full():
+                curr_i += 1
+                if curr_i == len(buffers):
+                    curr_i -= 1
+                    break
+                else:
+                    detected_time = time()
+
             # if wait time is reached, exit
-            if motion_detected and curr_time - prev_time > buffer_length:
-                buffers.append(temp_buffer)
-                buffers.append(vid_buffer)
+            if motion_detected and (curr_time - prev_time) > temp_buffer_len:
                 break
 
-        real_fps = vid_buffer.num_frames / (curr_time - detected_time)
+        real_fps = buffers[curr_i].num_frames / (curr_time - detected_time)
         return buffers, (frame.shape[1], frame.shape[0]), real_fps
 
 
