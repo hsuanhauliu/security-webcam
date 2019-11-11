@@ -18,28 +18,35 @@ from security_webcam.motion_detector import MotionDetector
 class CameraControl:
     """ Camera control class """
 
-    def __init__(self):
+    def __init__(self, fps=30, webcam_code=0, temp_buffer_len=5, vid_buffer_len=60,
+                 max_len=5, show_time=False, show_cam=False):
         self._md = MotionDetector(0.1)
         self._cap = None
+        self._fps = fps
+        self._webcam = webcam_code
+        self._temp_buffer_len = temp_buffer_len
+        self._vid_buffer_len = vid_buffer_len
+        self._max_len = max_len
+        self._show_time = show_time
+        self._show_cam = show_cam
 
 
-    def start_cam(self, fps=30, webcam_code=0):
+    def start_cam(self):
         """ Start webcam """
-        self._cap = cv.VideoCapture(webcam_code)
-        self._cap.set(cv.CAP_PROP_FPS, fps)
+        self._cap = cv.VideoCapture(self._webcam)
+        self._cap.set(cv.CAP_PROP_FPS, self._fps)
 
 
-    def start_recording(self, fps=30, temp_buffer_len=5, vid_buffer_len=60,
-                        max_len=5, show_time=False, show_cam=False, verbose=False):
+    def start_recording(self, verbose=False):
         """ Start recording """
         _, frame = self._cap.read()   # read the first frame to get dimension of the frame
 
         # initialize buffer list
-        temp_buffer = TemporaryBuffer(fps=fps, length=temp_buffer_len)
-        buffers = [None] * (max_len + 1)
+        temp_buffer = TemporaryBuffer(fps=self._fps, length=self._temp_buffer_len)
+        buffers = [None] * (self._max_len + 1)
         buffers[0] = temp_buffer
         for i in range(1, len(buffers)):
-            buffers[i] = VideoBuffer(fps=fps, length=vid_buffer_len)
+            buffers[i] = VideoBuffer(fps=self._fps, length=self._vid_buffer_len)
         curr_i = 1
 
         # initialize some variables
@@ -65,8 +72,8 @@ class CameraControl:
                 motion_detected = True
                 prev_time = time()
 
-            frame = self._add_time(frame) if show_time else None
-            self._show_cam(frame) if show_cam else None
+            frame = self._add_time(frame) if self._show_time else None
+            self._show_cam(frame) if self._show_cam else None
 
             # decide which buffer to put in
             buffers[curr_i].load(frame) if motion_detected else temp_buffer.load(frame)
@@ -83,7 +90,7 @@ class CameraControl:
                     detected_time = time()
 
             # if wait time is reached, exit
-            if motion_detected and (curr_time - prev_time) > temp_buffer_len:
+            if motion_detected and (curr_time - prev_time) > self._temp_buffer_len:
                 break
 
         real_fps = buffers[curr_i].num_frames / (curr_time - detected_time)

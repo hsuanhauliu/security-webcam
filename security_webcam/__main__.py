@@ -12,28 +12,24 @@ import security_webcam as sw
 
 def main():
     """ Main function """
-    verbose, show_cam, show_time, output_path, top_fps, temp_buffer_len, vid_buffer_len, max_len = parse_inputs()
-    print(f"Settings >>> top fps: {top_fps}, recording length: {max_len} minutes")
+    args = parse_inputs()
+    print(f"Settings >>> top fps: {args.fps}, recording length: {args.max_len} minutes")
 
-    if not os.path.isdir(output_path):
+    if not os.path.isdir(args.output):
         raise ValueError('Not a directory')
 
-    cc = sw.CameraControl()
-    cc.start_cam(fps=top_fps)
+    cc = sw.CameraControl(fps=args.fps, temp_buffer_len=args.temp_buffer_len,
+                          vid_buffer_len=args.vid_buffer_len, max_len=args.max_len,
+                          show_cam=args.show, show_time=args.time)
+    cc.start_cam()
     input(">>> Press Enter to start recording...")
     while True:
-        print("Recording...") if verbose else None
-        clips, frame_size, real_fps = cc.start_recording(fps=top_fps,
-                                                         temp_buffer_len=temp_buffer_len,
-                                                         vid_buffer_len=vid_buffer_len,
-                                                         max_len=max_len,
-                                                         show_cam=show_cam,
-                                                         verbose=verbose,
-                                                         show_time=show_time)
+        print("Recording...") if args.verbose else None
+        bufs, frame_size, real_fps = cc.start_recording(verbose=args.verbose)
 
-        print("Saving footage...") if verbose else None
-        filename = os.path.join(output_path, str(datetime.today()) + '.mov')
-        sw.output_vid(filename, clips, real_fps, frame_size)
+        print("Saving footage...") if args.verbose else None
+        filename = os.path.join(args.output, str(datetime.today()) + '.mov')
+        sw.output_vid(filename, bufs, real_fps, frame_size)
 
     cc.close_cam()
 
@@ -59,7 +55,7 @@ def parse_inputs():
                         help='maximum number of minutes for the recordings')
     args = parser.parse_args()
 
-    return args.verbose, args.show, args.time, args.output, args.fps, args.temp_buffer_len, args.vid_buffer_len, args.max_len
+    return args
 
 
 if __name__ == "__main__":
