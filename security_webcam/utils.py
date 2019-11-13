@@ -2,6 +2,7 @@
     Util module.
 """
 
+
 import cv2 as cv
 
 

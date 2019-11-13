@@ -4,6 +4,7 @@
 
 
 from argparse import ArgumentParser
+import json
 
 
 def parse_inputs():
@@ -30,4 +31,34 @@ def parse_inputs():
                         help='maximum number of minutes for the recordings')
     args = parser.parse_args()
 
+    if args.json:
+        filename = "config.json"
+        args = ArgHandler(filename)
+
     return args
+
+
+class ArgHandler:
+    """ Argument handler class """
+
+    def __init__(self, filename):
+        self.dict = self._load_config(filename)
+        self.verbose = self.dict["verbose"]
+        self.time = self.dict["time"]
+        self.show = self.dict["show_vid"]
+        self.output = self.dict["output_path"]
+        self.temp_buffer_len = self.dict["temp_buffer_len"]
+        self.vid_buffer_len = self.dict["vid_buffer_len"]
+        self.fps = self.dict["fps"]
+        self.max_len = self.dict["max_len"]
+
+
+    @staticmethod
+    def _load_config(filename):
+        """ Load the JSON configuration file """
+
+        content = None
+        with open(filename, "r") as rfile:
+            content = json.load(rfile)
+
+        return content
