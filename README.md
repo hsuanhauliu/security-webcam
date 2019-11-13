@@ -37,7 +37,7 @@ Use the following command to install all packages.
 pip install -r requirements.txt
 ```
 
-Build the program from source.s
+Build the program from source.
 ```
 git clone https://github.com/hsuanhauliu/security-webcam
 cd security-webcam
@@ -54,7 +54,7 @@ To start the program with default settings, simply type
 security_webcam
 ```
 
-It also has options for you to customize the settings.
+It also has options for you to customize the settings. You can also modify the config.json file for settings.
 
 ```
 security_webcam [-h] [-v] [-t] [-s] [-o OUTPUT] [--fps] [--temp_buffer_len] [--vid_buffer_len] [--max_len]
@@ -62,6 +62,7 @@ security_webcam [-h] [-v] [-t] [-s] [-o OUTPUT] [--fps] [--temp_buffer_len] [--v
 
 - -h: help flag
 - -v: verbose for showing more messages.
+- -j: use config.json in the root directory for configuration. Note that by using this flag, all other flags will be ignored.
 - -t: show time on the recordings. True by default.
 - -s: show webcam stream.
 - -o: output path. Default to current directory.
@@ -73,7 +74,11 @@ security_webcam [-h] [-v] [-t] [-s] [-o OUTPUT] [--fps] [--temp_buffer_len] [--v
 
 Example:
 ```
+# Manually trigger flags for settings.
 security_webcam -v -o recordings/ --fps 15 --max_len 3
+
+# Use config.json file for settings.
+security_webcam -j
 ```
 
 To quit the program, simply press Ctrl-C or ESC if -s flag is used.
@@ -87,10 +92,11 @@ You can also import the package in your code. See [demo.py](demo.py) for example
 - [x] Use motion detection instead.
 - [x] Implement maximum video length to segment long video recordings.
 - [x] Add time stamp.
-- [ ] Remove imutils dependency.
+- [x] Remove imutils dependency.
 - [ ] Add more error checking to the modules.
-- [ ] Use JSON file for settings.
+- [x] Use JSON file for settings.
 - [ ] Improve documentation.
 - [ ] Use facial recognition to determine if a footage is important.
 - [ ] Add the ability to log important events.
+- [ ] Add GUI for settings.
 - [ ] Add local server to stream the video
