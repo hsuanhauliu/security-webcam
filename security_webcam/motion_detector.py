@@ -3,7 +3,6 @@
 """
 
 import cv2 as cv
-import imutils
 import numpy as np
 
 
@@ -53,8 +52,7 @@ class MotionDetector:
         th = cv.dilate(th, None, iterations=2)
 
         cnts = cv.findContours(th.copy(), cv.RETR_EXTERNAL,
-                               cv.CHAIN_APPROX_SIMPLE)
-        cnts = imutils.grab_contours(cnts)
+                               cv.CHAIN_APPROX_SIMPLE)[0]
         rect = self._find_boundary(cnts)
 
         self._update(im)
