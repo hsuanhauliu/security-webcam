@@ -65,7 +65,7 @@ security_webcam [-h] [-v] [-t] [-s] [-o OUTPUT] [--fps] [--temp_buffer_len] [--v
 - -j: use config.json in the root directory for configuration. Note that by using this flag, all other flags will be ignored.
 - -t: show time on the recordings. True by default.
 - -s: show webcam stream.
-- -o: output path. Default to current directory.
+- -o: output path. Default to "recordings/" directory.
 - --top_fps: maximum fps allowed. Default to 30 fps.
 - --temp_buffer_len: length (in seconds) of the video segments before and after important footage. Default to 5 seconds.
 - --vid_buffer_len: length (in seconds) of the actual captured footage. Default to 60 seconds.

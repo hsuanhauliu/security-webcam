@@ -2,7 +2,7 @@
 	"verbose": true,
 	"time": true,
 	"show_vid": false,
-	"output_path": "./",
+	"output_path": "",
 	"temp_buffer_len": 5,
 	"vid_buffer_len": 60,
 	"fps": 30,

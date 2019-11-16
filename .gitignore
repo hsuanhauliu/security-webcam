@@ -3,6 +3,7 @@
 
 # Videos
 *.mov
+recordings/
 
 # Temporary/Test folders
 temp/
