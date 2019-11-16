@@ -86,17 +86,3 @@ To quit the program, simply press Ctrl-C or ESC if -s flag is used.
 #### Import As Python Package
 
 You can also import the package in your code. See [demo.py](demo.py) for examples.
-
-
-## Tasks
-- [x] Use motion detection instead.
-- [x] Implement maximum video length to segment long video recordings.
-- [x] Add time stamp.
-- [x] Remove imutils dependency.
-- [ ] Add more error checking to the modules.
-- [x] Use JSON file for settings.
-- [ ] Improve documentation.
-- [ ] Use facial recognition to determine if a footage is important.
-- [ ] Add the ability to log important events.
-- [ ] Add GUI for settings.
-- [ ] Add local server to stream the video
