@@ -73,7 +73,7 @@ class CameraControl:
                 prev_time = time()
 
             frame = self._add_time(frame) if self._show_time else None
-            self._show_cam(frame) if self._show_cam else None
+            self._stream_vid(frame) if self._show_cam else None
 
             # decide which buffer to put in
             buffers[curr_i].load(frame) if motion_detected else temp_buffer.load(frame)
@@ -106,7 +106,7 @@ class CameraControl:
 
 
     @staticmethod
-    def _show_cam(frame):
+    def _stream_vid(frame):
         """ Display the video feed """
         cv.imshow('Security Webcam', frame)
         key = cv.waitKey(1) & 0xFF
