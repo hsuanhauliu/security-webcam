@@ -5,14 +5,14 @@ A motion-sensing webcam-based security system that auto-saves important footages
 ## How It Works
 
 - After the program starts, it will start recording via webcam on your computer. All frames are saved in a buffer which is used to save the most recent frames (default to 5 seconds) before any motion is detected.
-- Every time a face is detected, it will start saving all the frames until motion is no longer being detected. All videos are saved in mov format and placed in the specified directory (default to current directory).
+- Every time a movement is detected, it will start saving all the frames until motion is no longer being detected. All videos are saved in .mov format and stored in the specified directory (default to "recordings/" directory).
 - The program will then resume to recording and repeat the same process until the user terminates the program.
 - If the footage is longer than a certain amount of time (default to 5 minutes), the footage will be segmented into smaller video files.
 
 ## Features
 
 - Customizable settings (fps, buffer length, segmentation length, etc)
-- Real-time face detection.
+- Motion detection ability to trigger recording.
 - CLI provides easy execution.
 - Ability to see the video stream happening in real-time.
 
@@ -24,7 +24,6 @@ These instructions will get you a copy of the project up and running on your loc
 
 See [here](requirements.txt) for a complete list of required modules.
 - Python >= 3.6
-- [face_recognition](https://github.com/ageitgey/face_recognition) >= 1.2.3
 - OpenCV >= 3.4.2
 
 
