@@ -22,7 +22,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-See [here](requirements.txt) for a complete list of required modules.
+See [here](requirements.txt) for a complete list of required packages.
 - Python >= 3.6
 - OpenCV >= 3.4.2
 

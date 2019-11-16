@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='security_webcam',
+    name='security-webcam',
     version='0.1',
     author='Hsuan-Hau Liu',
     description='Simple security camera system right on your computer.',
