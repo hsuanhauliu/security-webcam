@@ -1,4 +1,2 @@
 numpy==1.17.4
 opencv-python==4.1.1.26
-security-webcam==0.1
-SecurityWebcam==0.1
