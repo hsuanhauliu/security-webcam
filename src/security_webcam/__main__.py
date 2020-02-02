@@ -27,7 +27,7 @@ def main():
 
         print("Saving footage...") if args.verbose else None
         filename = os.path.join(args.output, str(datetime.today()) + '.mov')
-        sw.output_vid(filename, bufs, real_fps, frame_size)
+        sw.utils.output_vid(filename, bufs, real_fps, frame_size)
 
     cc.close_cam()
 
@@ -35,7 +35,7 @@ def main():
 def check_output_path(path):
     """ Check given output directory path """
     if not path:
-        path = sw.create_vid_folder()
+        path = sw.utils.create_vid_folder()
 
     if not os.path.isdir(path):
         raise ValueError('Not a directory')
