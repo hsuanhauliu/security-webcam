@@ -1,5 +1,5 @@
 """
-    A security camera on computer using webcam.
+    A security camera on computer using webcam. Make sure to install first.
 
     Usage:
         python3 demo.py
@@ -13,7 +13,7 @@ import security_webcam as sw
 
 def main():
     """ Main function """
-
+    print('Running the demo...')
     cc = sw.CameraControl(fps=30, temp_buffer_len=5, vid_buffer_len=10,
                           max_len=5, show_cam=False, show_time=True)
     cc.start_cam()
@@ -24,7 +24,7 @@ def main():
 
         print("Saving footage...")
         filename = str(datetime.today()) + '.mov'
-        sw.output_vid(filename, clips, real_fps, frame_size)
+        sw.utils.output_vid(filename, clips, real_fps, frame_size)
 
     sw.close_cam()
 

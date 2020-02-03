@@ -7,11 +7,9 @@ from pathlib import Path
 import cv2 as cv
 
 
-def create_vid_folder():
+def create_vid_folder(dir_path="recordings/"):
     """ Create a folder to storing recorded videos """
-    default_name = "recordings/"
-    Path(default_name).mkdir(exist_ok=True)
-    return default_name
+    Path(dir_path).mkdir(exist_ok=True)
 
 
 def output_vid(output_file, vid_buffers, fps, frame_size):

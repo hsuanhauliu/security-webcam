@@ -19,7 +19,7 @@ def parse_inputs():
                         help='place time on footage')
     parser.add_argument('-s', '--show', action='store_true',
                         help='show video steam while recording')
-    parser.add_argument('-o', '--output', default='',
+    parser.add_argument('-o', '--output', default='recordings/',
                         help='specify output folder path')
     parser.add_argument('--temp_buffer_len', type=int, default=5,
                         help='video temporary buffer length (in seconds)')

@@ -4,18 +4,18 @@
 
 
 from datetime import datetime
+from multiprocessing import Process, cpu_count
 import os
 
 import security_webcam as sw
 
 
 def main():
-    """ Main function """
-
+    """ Main Loop """
     args = sw.parse_inputs()
     print(f"Settings >>> top fps: {args.fps}, recording length: {args.max_len} minutes")
 
-    args.output = check_output_path(args.output)
+    sw.utils.create_vid_folder(args.output)
     cc = sw.CameraControl(fps=args.fps, temp_buffer_len=args.temp_buffer_len,
                           vid_buffer_len=args.vid_buffer_len, max_len=args.max_len,
                           show_cam=args.show, show_time=args.time)
@@ -27,20 +27,10 @@ def main():
 
         print("Saving footage...") if args.verbose else None
         filename = os.path.join(args.output, str(datetime.today()) + '.mov')
-        sw.utils.output_vid(filename, bufs, real_fps, frame_size)
+        p = Process(target=sw.utils.output_vid, args=(filename, bufs, real_fps, frame_size))
+        p.start()
 
     cc.close_cam()
-
-
-def check_output_path(path):
-    """ Check given output directory path """
-    if not path:
-        path = sw.utils.create_vid_folder()
-
-    if not os.path.isdir(path):
-        raise ValueError('Not a directory')
-
-    return path
 
 
 if __name__ == "__main__":
