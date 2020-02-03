@@ -5,9 +5,10 @@
 *.mov
 recordings/
 
-# Temporary/Test folders
+# Misc.
 temp/
 test/
+log.txt
 
 # Pylint
 pylintrc

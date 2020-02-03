@@ -2,9 +2,18 @@
     Util module.
 """
 
+from datetime import datetime
 from pathlib import Path
 
 import cv2 as cv
+
+
+EVENT = {
+    'start': 'Program started',
+    'recording': 'Start recording',
+    'save': 'Saving footage',
+    'exit': 'Program exited'
+}
 
 
 def create_vid_dir(dir_path="recordings/"):
@@ -22,3 +31,10 @@ def output_vid(output_file, vid_buffers, fps, frame_size):
             out.write(frame)
 
     out.release()
+
+
+def log_event(event_name, filename="log.txt"):
+    """ Log important events """
+    with open(filename, "a") as rfile:
+        curr_time = str(datetime.today())
+        rfile.write(f"{curr_time}: {EVENT[event_name]}\n")
