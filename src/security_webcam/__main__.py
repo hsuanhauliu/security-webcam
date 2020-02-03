@@ -22,10 +22,10 @@ def main():
     cc.start_cam()
     input(">>> Press Enter to start recording...")
     while True:
-        print("Recording...") if args.verbose else None
+        if args.verbose: print("Recording...") 
         bufs, frame_size, real_fps = cc.start_recording(verbose=args.verbose)
 
-        print("Saving footage...") if args.verbose else None
+        if args.verbose: print("Saving footage...") 
         filename = os.path.join(args.output, str(datetime.today()) + '.mov')
         p = Process(target=sw.utils.output_vid, args=(filename, bufs, real_fps, frame_size))
         p.start()

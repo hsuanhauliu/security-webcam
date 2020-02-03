@@ -66,7 +66,7 @@ class CameraControl:
             # switch mode once a face is detected
             if detected_frame:
                 if not motion_detected:
-                    print('>>> MOTION DETECTED!!!') if verbose else None
+                    if verbose: print('>>> MOTION DETECTED!!!')
                     detected_time = time()
 
                 motion_detected = True
