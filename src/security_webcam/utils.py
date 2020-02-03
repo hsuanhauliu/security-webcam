@@ -7,7 +7,7 @@ from pathlib import Path
 import cv2 as cv
 
 
-def create_vid_folder(dir_path="recordings/"):
+def create_vid_dir(dir_path="recordings/"):
     """ Create a folder to storing recorded videos """
     Path(dir_path).mkdir(exist_ok=True)
 

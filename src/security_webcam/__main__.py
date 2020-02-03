@@ -15,7 +15,7 @@ def main():
     args = sw.parse_inputs()
     print(f"Settings >>> top fps: {args.fps}, recording length: {args.max_len} minutes")
 
-    sw.utils.create_vid_folder(args.output)
+    sw.utils.create_vid_dir(args.output)
     cc = sw.CameraControl(fps=args.fps, temp_buffer_len=args.temp_buffer_len,
                           vid_buffer_len=args.vid_buffer_len, max_len=args.max_len,
                           show_cam=args.show, show_time=args.time)
