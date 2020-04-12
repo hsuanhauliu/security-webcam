@@ -7,12 +7,11 @@ from pathlib import Path
 
 import cv2 as cv
 
-
 EVENT = {
-    'start': 'Program started',
-    'recording': 'Start recording',
-    'save': 'Saving footage',
-    'exit': 'Program exited'
+    "start": "Program started",
+    "recording": "Start recording",
+    "save": "Saving footage",
+    "exit": "Program exited",
 }
 
 

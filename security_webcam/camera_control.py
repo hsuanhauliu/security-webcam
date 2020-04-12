@@ -2,24 +2,29 @@
     Module for processing videos
 """
 
-# pylint: disable=expression-not-assigned, too-many-locals, too-many-arguments
-
 
 from datetime import datetime
 from time import time
-import sys
 
 import cv2 as cv
-#import face_recognition as fr
-from security_webcam.video_buffer import VideoBuffer, TemporaryBuffer
+
 from security_webcam.motion_detector import MotionDetector
+from security_webcam.video_buffer import TemporaryBuffer, VideoBuffer
 
 
 class CameraControl:
     """ Camera control class """
 
-    def __init__(self, fps=30, webcam_code=0, temp_buffer_len=5, vid_buffer_len=60,
-                 max_len=5, show_time=False, show_cam=False):
+    def __init__(
+        self,
+        fps=30,
+        webcam_code=0,
+        temp_buffer_len=5,
+        vid_buffer_len=60,
+        max_len=5,
+        show_time=False,
+        show_cam=False,
+    ):
         self._md = MotionDetector(0.1)
         self._cap = None
         self._fps = fps
@@ -30,16 +35,17 @@ class CameraControl:
         self._show_time = show_time
         self._show_cam = show_cam
 
-
     def start_cam(self):
         """ Start webcam """
         self._cap = cv.VideoCapture(self._webcam)
         self._cap.set(cv.CAP_PROP_FPS, self._fps)
 
-
     def start_recording(self, verbose=False):
         """ Start recording """
-        _, frame = self._cap.read()   # read the first frame to get dimension of the frame
+        (
+            _,
+            frame,
+        ) = self._cap.read()  # read the first frame to get dimension of the frame
 
         # initialize buffer list
         temp_buffer = TemporaryBuffer(fps=self._fps, length=self._temp_buffer_len)
@@ -60,13 +66,14 @@ class CameraControl:
             detected_frame = self._md.detect(frame)
 
             # TODO use face recognition somewhere else?
-            #small_frame = cv.resize(frame, (0, 0), fx=0.25, fy=0.25)
-            #face_locations = fr.face_locations(small_frame)
+            # small_frame = cv.resize(frame, (0, 0), fx=0.25, fy=0.25)
+            # face_locations = fr.face_locations(small_frame)
 
             # switch mode once a face is detected
             if detected_frame:
                 if not motion_detected:
-                    if verbose: print('>>> MOTION DETECTED!!!')
+                    if verbose:
+                        print(">>> MOTION DETECTED!!!")
                     detected_time = time()
 
                 motion_detected = True
@@ -96,23 +103,21 @@ class CameraControl:
         real_fps = buffers[curr_i].num_frames / (curr_time - detected_time)
         return buffers, (frame.shape[1], frame.shape[0]), real_fps
 
-
     @staticmethod
     def _add_time(frame):
         """ Add time stamp to the frame """
         now = datetime.today().strftime("%m-%d-%Y %H:%M:%S")
-        return cv.putText(frame, now, (25, 50), cv.FONT_HERSHEY_SIMPLEX,
-                          1, (0, 0, 255), 2)
-
+        return cv.putText(
+            frame, now, (25, 50), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2
+        )
 
     @staticmethod
     def _stream_vid(frame):
         """ Display the video feed """
-        cv.imshow('Security Webcam', frame)
+        cv.imshow("Security Webcam", frame)
         key = cv.waitKey(1) & 0xFF
         if key == 27:
-            sys.exit(0)
-
+            raise KeyboardInterrupt
 
     def close_cam(self):
         """ Properly close webcam """

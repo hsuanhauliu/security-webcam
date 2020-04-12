@@ -14,14 +14,12 @@ class MotionDetector:
         self.bg = None
         self._counter = 0
 
-
     @staticmethod
     def _process_frame(frame, ratio):
         """ Process frame for motion detection """
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         gray = cv.resize(gray, (0, 0), fx=ratio, fy=ratio)
         return cv.GaussianBlur(gray, (7, 7), 0)
-
 
     def _update(self, im):
         """ Compute average weight of the input image """
@@ -30,7 +28,6 @@ class MotionDetector:
             return
 
         cv.accumulateWeighted(im, self.bg, self.weight)
-
 
     def detect(self, im, threshold=25):
         """ Detect motion from the image """
@@ -51,13 +48,11 @@ class MotionDetector:
         th = cv.erode(th, None, iterations=2)
         th = cv.dilate(th, None, iterations=2)
 
-        cnts = cv.findContours(th.copy(), cv.RETR_EXTERNAL,
-                               cv.CHAIN_APPROX_SIMPLE)[0]
+        cnts = cv.findContours(th.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)[0]
         rect = self._find_boundary(cnts)
 
         self._update(im)
         return rect
-
 
     @staticmethod
     def _find_boundary(contours):
