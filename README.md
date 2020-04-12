@@ -4,10 +4,11 @@ A motion-sensing webcam-based security system that auto-saves important footages
 
 ## How It Works
 
-- After the program starts, it will start recording via webcam on your computer. All frames are saved in a buffer which is used to save the most recent frames (default to 5 seconds) before any motion is detected.
-- Every time a movement is detected, it will start saving all the frames until motion is no longer being detected. All videos are saved in .mov format and stored in the specified directory (default to "recordings/" directory).
-- The program will then resume to recording and repeat the same process until the user terminates the program.
-- If the footage is longer than a certain amount of time (default to 5 minutes), the footage will be segmented into smaller video files.
+After the program starts, it will start recording via webcam on your computer. All frames are saved in a buffer which is used to save the most recent frames (default to 5 seconds) before any motion is detected.
+
+Every time a movement is detected, it will start saving all the frames until motion is no longer being detected. All videos are saved in MOV format (.mov) and stored in the specified directory (default to "recordings/" folder in the current directory).
+
+The program will then resume to recording and repeat the same process until the user terminates the program. If the footage is longer than a certain amount of time (default to 5 minutes), the footage will be segmented into smaller video files.
 
 ## Features
 
@@ -61,7 +62,7 @@ security_webcam [-h] [-v] [-t] [-s] [-o OUTPUT] [--fps] [--temp_buffer_len] [--v
 
 - -h: help flag
 - -v: verbose for showing more messages.
-- -j: use config.json in the root directory for configuration. Note that by using this flag, all other flags will be ignored.
+- -j: read settings from the specified JSON file. See sample-config.json for an example. Note that by using this flag, all other flags will be ignored.
 - -t: show time on the recordings. True by default.
 - -s: show webcam stream.
 - -o: output path. Default to "recordings/" directory.
@@ -77,7 +78,7 @@ Example:
 security_webcam -v -o recordings/ --fps 15 --max_len 3
 
 # Use config.json file for settings.
-security_webcam -j
+security_webcam -j sample-config.json
 ```
 
 To quit the program, simply press Ctrl-C or ESC if -s flag is used.

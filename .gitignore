@@ -7,11 +7,13 @@ recordings/
 
 # Misc.
 temp/
-test/
-log.txt
+logs.txt
 
 # Pylint
 pylintrc
+
+# VS Code
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
