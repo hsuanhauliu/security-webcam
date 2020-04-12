@@ -33,7 +33,7 @@ def output_vid(output_file, vid_buffers, fps, frame_size):
     out.release()
 
 
-def log_event(event_name, filename="log.txt"):
+def log_event(event_name, filename="logs.txt"):
     """ Log important events """
     with open(filename, "a") as rfile:
         curr_time = str(datetime.today())
