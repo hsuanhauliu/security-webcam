@@ -29,6 +29,7 @@ def main():
         print(">>> Starting Camera...")
         cc.start_cam()
         input(">>> Press Enter to start recording...")
+
         while True:
             if args.verbose:
                 print("Recording...")

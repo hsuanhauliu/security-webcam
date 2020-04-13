@@ -9,11 +9,11 @@ recordings/
 temp/
 logs.txt
 
-# Pylint
-pylintrc
-
-# VS Code
+# Development
+README.rst
 .vscode/
+poetry.toml
+pylintrc
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
